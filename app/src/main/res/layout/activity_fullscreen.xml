@@ -1,0 +1,93 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    tools:context="com.jerry.simplespeedometer.FullscreenActivity" >
+
+    <!--
+         The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc.
+    -->
+
+    <TextView
+        android:id="@+id/speed"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:keepScreenOn="true"
+        android:paddingBottom="50dp"
+        android:text="@string/speed"
+        android:textColor="#ffffff"
+        android:textSize="140sp"
+        android:textStyle="bold" />
+    
+    <!-- android:textColor="#33b5e5" -->
+    
+    <TextView
+        android:id="@+id/speed_unit"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingLeft="0dp"
+        android:paddingTop="190dp"
+        android:text="@string/speedunit"
+        android:textColor="#ffffff"
+        android:textSize="60sp"
+        android:textStyle="bold" />
+    
+    <TextView
+        android:id="@+id/top_speed_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingLeft="215dp"
+        android:paddingTop="370dp"
+        android:text="@string/topspeed_text"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+    
+    <TextView
+        android:id="@+id/top_speed"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingLeft="220dp"
+        android:paddingTop="420dp"
+        android:text="@string/topspeed"
+        android:textColor="#ffffff"
+        android:textSize="26sp" />
+
+    <!--
+         This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows.
+    -->
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true" >
+
+        <LinearLayout
+            android:id="@+id/fullscreen_content_controls"
+            style="?metaButtonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@color/black_overlay"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent" >
+
+            <!--Button
+                android:id="@+id/dummy_button"
+                style="?metaButtonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/dummy_button" -->
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>
