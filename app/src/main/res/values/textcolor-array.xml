@@ -1,0 +1,14 @@
+<resources>
+    <string-array name="textColorArray">
+        <item>White</item>
+        <item>Red</item>
+        <item>Green</item>
+        <item>Blue</item>
+    </string-array>
+    <string-array name="textColorValues">
+        <item>#FFFFFF</item>
+        <item>#FF0000</item>
+        <item>#04ff00</item>
+        <item>#00fbff</item>
+    </string-array>
+</resources>

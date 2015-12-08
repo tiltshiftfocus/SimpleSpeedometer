@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--ListPreference
+        android:title="Choose text color"
+        android:summary="%s"
+        android:key="textColor"
+        android:defaultValue="#FFFFFF"
+        android:entries="@array/textColorArray"
+        android:entryValues="@array/textColorValues" /-->
+
+    <!--ListPreference
+        android:title="Choose background color"
+        android:summary="%s"
+        android:key="bgColor"
+        android:defaultValue="black"
+        android:entries="@array/bgColorArray"
+        android:entryValues="@array/bgColorValues" /-->
+
+    <net.margaritov.preference.colorpicker.ColorPickerPreference
+        android:key="color1"
+        android:title="Choose text color"
+        android:summary="Text color for speedometer"
+        android:defaultValue="#FFFFFF"
+        alphaSlider="false"
+    />
+
+
+</PreferenceScreen>

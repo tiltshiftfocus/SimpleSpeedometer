@@ -1,0 +1,10 @@
+<resources>
+    <string-array name="bgColorArray">
+        <item>White</item>
+        <item>Black</item>
+    </string-array>
+    <string-array name="bgColorValues">
+        <item>white</item>
+        <item>black</item>
+    </string-array>
+</resources>

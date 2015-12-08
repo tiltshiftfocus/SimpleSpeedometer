@@ -3,6 +3,9 @@ package com.jerry.simplespeedometer;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
@@ -10,6 +13,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -17,6 +21,8 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.jerry.simplespeedometer.util.SystemUiHider;
+
+import net.margaritov.preference.colorpicker.ColorPickerPreference;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -47,6 +53,7 @@ public class FullscreenActivity extends Activity implements LocationListener {
 	 * The flags to pass to {@link SystemUiHider#getInstance}.
 	 */
 	private static final int HIDER_FLAGS = SystemUiHider.FLAG_FULLSCREEN;
+	private final int SETTINGS_RESULT = 190;
 
 	/**
 	 * The instance of the {@link SystemUiHider} for this activity.
@@ -57,6 +64,7 @@ public class FullscreenActivity extends Activity implements LocationListener {
 	private LocationManager lm;
 	private TextView text;
 	private TextView topSpeed;
+	private TextView speedUnit;
 	private int topSpeedTemp=0;
 	
 	private WorkingCompass compass;
@@ -64,12 +72,19 @@ public class FullscreenActivity extends Activity implements LocationListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
 		setContentView(R.layout.activity_fullscreen2);
 		
 		text = (TextView)findViewById(R.id.speed);
 		topSpeed = (TextView)findViewById(R.id.top_speed);
-		
+		speedUnit = (TextView) findViewById(R.id.speed_unit);
+
+		String textColorHEX = Integer.toString(pref.getInt("color1", -1));
+		textColorHEX = ColorPickerPreference.convertToARGB(Integer.valueOf(String.valueOf(textColorHEX)));
+		text.setTextColor(Color.parseColor(textColorHEX));
+		speedUnit.setTextColor(Color.parseColor(textColorHEX));
+
 		Typeface custom_font = Typeface.createFromAsset(getAssets(), "DIGITALDREAMFAT.ttf");
 		text.setTypeface(custom_font);
 		
@@ -131,11 +146,13 @@ public class FullscreenActivity extends Activity implements LocationListener {
 		contentView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (TOGGLE_ON_CLICK) {
+				/*if (TOGGLE_ON_CLICK) {
 					mSystemUiHider.toggle();
 				} else {
 					mSystemUiHider.show();
-				}
+				}*/
+				Intent i = new Intent(view.getContext(), SettingsActivity.class);
+				startActivityForResult(i, SETTINGS_RESULT);
 			}
 		});
 
@@ -144,6 +161,18 @@ public class FullscreenActivity extends Activity implements LocationListener {
 		// while interacting with the UI.
 		/*findViewById(R.id.dummy_button).setOnTouchListener(
 				mDelayHideTouchListener);*/
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+
+		if(requestCode == this.SETTINGS_RESULT){
+			String textColorHEX = Integer.toString(pref.getInt("color1", -1));
+			textColorHEX = ColorPickerPreference.convertToARGB(Integer.valueOf(String.valueOf(textColorHEX)));
+			text.setTextColor(Color.parseColor(textColorHEX));
+			speedUnit.setTextColor(Color.parseColor(textColorHEX));
+		}
 	}
 
 	@Override
