@@ -2,24 +2,14 @@ package com.jerry.simplespeedometer;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 
-import com.jerry.simplespeedometer.helper.PreferenceHelper;
 import com.jerry.simplespeedometer.util.SystemUiHider;
-
-import net.margaritov.preference.colorpicker.ColorPickerPreference;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -27,7 +17,8 @@ import net.margaritov.preference.colorpicker.ColorPickerPreference;
  * 
  * @see SystemUiHider
  */
-public class FullscreenActivity extends Activity implements LocationListener {
+public abstract class FullscreenActivity extends Activity {
+
 	/**
 	 * Whether or not the system UI should be auto-hidden after
 	 * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -50,39 +41,18 @@ public class FullscreenActivity extends Activity implements LocationListener {
 	 * The flags to pass to {@link SystemUiHider#getInstance}.
 	 */
 	private static final int HIDER_FLAGS = SystemUiHider.FLAG_FULLSCREEN;
-	private final int SETTINGS_RESULT = 190;
 
 	/**
 	 * The instance of the {@link SystemUiHider} for this activity.
 	 */
 	private SystemUiHider mSystemUiHider;
 
-	private LocationManager lm;
-	private TextView text;
-	private TextView topSpeed;
-	private TextView speedUnit;
-	private int topSpeedTemp=0;
-	
-	private WorkingCompass compass;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_fullscreen2);
-		
-		text = (TextView)findViewById(R.id.speed);
-		topSpeed = (TextView)findViewById(R.id.top_speed);
-		speedUnit = (TextView) findViewById(R.id.speed_unit);
-
-		setSpeedometerColor();
-		setFont();
-		
-		lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
-		compass = new WorkingCompass(this,this);
-		
-		this.onLocationChanged(null);
+//		setContentView(R.layout.activity_fullscreen2);
 
 		final View controlsView = findViewById(R.id.fullscreen_content_controls);
 		final View contentView = findViewById(R.id.speed);
@@ -142,7 +112,7 @@ public class FullscreenActivity extends Activity implements LocationListener {
 					mSystemUiHider.show();
 				}*/
 				Intent i = new Intent(view.getContext(), SettingsActivity.class);
-				startActivityForResult(i, SETTINGS_RESULT);
+				startActivityForResult(i, SpeedometerActivity.SETTINGS_RESULT);
 			}
 		});
 
@@ -153,24 +123,6 @@ public class FullscreenActivity extends Activity implements LocationListener {
 				mDelayHideTouchListener);*/
 	}
 
-	private void setFont() {
-		Typeface custom_font = Typeface.createFromAsset(getAssets(), "DIGITALDREAMFAT.ttf");
-		text.setTypeface(custom_font);
-	}
-
-	private void setSpeedometerColor() {
-		String textColorHEX = Integer.toString(PreferenceHelper.getInstance(this).getSpeedometerColor());
-		textColorHEX = ColorPickerPreference.convertToARGB(Integer.valueOf(String.valueOf(textColorHEX)));
-		text.setTextColor(Color.parseColor(textColorHEX));
-		speedUnit.setTextColor(Color.parseColor(textColorHEX));
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(requestCode == this.SETTINGS_RESULT){
-			setSpeedometerColor();
-		}
-	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
@@ -212,77 +164,5 @@ public class FullscreenActivity extends Activity implements LocationListener {
 	private void delayedHide(int delayMillis) {
 		mHideHandler.removeCallbacks(mHideRunnable);
 		mHideHandler.postDelayed(mHideRunnable, delayMillis);
-	}
-	
-	@Override
-	public void onBackPressed(){
-		
-		lm.removeUpdates(this);
-		finish();
-	}
-	
-	@Override
-	public void onPause(){
-		lm.removeUpdates(this);
-		compass.pauseCompass();
-		super.onPause();
-	}
-	
-	@Override
-	public void onResume(){
-		super.onResume();
-		text.setText("--");
-		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
-		compass.resumeCompass();
-	}
-
-	@Override
-	public void onLocationChanged(Location location) {
-
-		float mCurrentSpeed=0;
-		int mCurrentSpeedKMH=0;
-		
-		if(location==null){
-			text.setText("--");
-			topSpeed.setText("--");
-		}else{
-			mCurrentSpeed = location.getSpeed();
-			mCurrentSpeedKMH = (int)Math.round((mCurrentSpeed*3600)/1000);
-			//String speedText = String.format("%.0f", mCurrentSpeedKMH);
-			text.setText(mCurrentSpeedKMH+"");
-			
-			if(mCurrentSpeedKMH>topSpeedTemp){
-				
-				topSpeedTemp = mCurrentSpeedKMH;
-				//String topSpeedStr = String.format("%.0f", topSpeedTemp);
-				topSpeed.setText(topSpeedTemp + " km/h");
-			}
-			
-			
-			
-		}
-		
-		/*
-		 * mCurrentSpeedKMH=2
-		 * newTopSpeed=0
-		 * topSpeedTemp=2
-		 
-		*/
-		
-	}
-
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onProviderEnabled(String provider) {
-	}
-
-	@Override
-	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
-		
 	}
 }

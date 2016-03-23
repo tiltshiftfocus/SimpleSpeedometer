@@ -4,7 +4,7 @@
     <string name="app_name">Speedometer</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="speed">50</string>
+    <string name="speed">0</string>
     <string name="speedunit">km/h</string>
     <string name="topspeed_text">Top Speed</string>
     <string name="topspeed">0 km/h</string>
