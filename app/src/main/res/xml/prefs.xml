@@ -18,7 +18,7 @@
         android:entryValues="@array/bgColorValues" /-->
 
     <net.margaritov.preference.colorpicker.ColorPickerPreference
-        android:key="color1"
+        android:key="speedometer_color"
         android:title="Choose text color"
         android:summary="Text color for speedometer"
         android:defaultValue="#FFFFFF"

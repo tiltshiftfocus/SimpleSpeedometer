@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -13,13 +12,11 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.jerry.simplespeedometer.helper.PreferenceHelper;
 import com.jerry.simplespeedometer.util.SystemUiHider;
 
 import net.margaritov.preference.colorpicker.ColorPickerPreference;
@@ -59,8 +56,7 @@ public class FullscreenActivity extends Activity implements LocationListener {
 	 * The instance of the {@link SystemUiHider} for this activity.
 	 */
 	private SystemUiHider mSystemUiHider;
-	
-	
+
 	private LocationManager lm;
 	private TextView text;
 	private TextView topSpeed;
@@ -72,7 +68,6 @@ public class FullscreenActivity extends Activity implements LocationListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
 		setContentView(R.layout.activity_fullscreen2);
 		
@@ -80,13 +75,8 @@ public class FullscreenActivity extends Activity implements LocationListener {
 		topSpeed = (TextView)findViewById(R.id.top_speed);
 		speedUnit = (TextView) findViewById(R.id.speed_unit);
 
-		String textColorHEX = Integer.toString(pref.getInt("color1", -1));
-		textColorHEX = ColorPickerPreference.convertToARGB(Integer.valueOf(String.valueOf(textColorHEX)));
-		text.setTextColor(Color.parseColor(textColorHEX));
-		speedUnit.setTextColor(Color.parseColor(textColorHEX));
-
-		Typeface custom_font = Typeface.createFromAsset(getAssets(), "DIGITALDREAMFAT.ttf");
-		text.setTypeface(custom_font);
+		setSpeedometerColor();
+		setFont();
 		
 		lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
 		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
@@ -163,15 +153,22 @@ public class FullscreenActivity extends Activity implements LocationListener {
 				mDelayHideTouchListener);*/
 	}
 
+	private void setFont() {
+		Typeface custom_font = Typeface.createFromAsset(getAssets(), "DIGITALDREAMFAT.ttf");
+		text.setTypeface(custom_font);
+	}
+
+	private void setSpeedometerColor() {
+		String textColorHEX = Integer.toString(PreferenceHelper.getInstance(this).getSpeedometerColor());
+		textColorHEX = ColorPickerPreference.convertToARGB(Integer.valueOf(String.valueOf(textColorHEX)));
+		text.setTextColor(Color.parseColor(textColorHEX));
+		speedUnit.setTextColor(Color.parseColor(textColorHEX));
+	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-
 		if(requestCode == this.SETTINGS_RESULT){
-			String textColorHEX = Integer.toString(pref.getInt("color1", -1));
-			textColorHEX = ColorPickerPreference.convertToARGB(Integer.valueOf(String.valueOf(textColorHEX)));
-			text.setTextColor(Color.parseColor(textColorHEX));
-			speedUnit.setTextColor(Color.parseColor(textColorHEX));
+			setSpeedometerColor();
 		}
 	}
 
